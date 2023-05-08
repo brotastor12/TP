@@ -37,5 +37,5 @@ pertenece x ys
 mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos xs ys 
                 | pertenece (head xs) ys && tail xs == [] = True
-                | pertenece (head xs) ys && tail xs == [] = False
+                | pertenece (head xs) ys == False && tail xs == [] = False
                 | otherwise = (mismoselementos (tail xs) ys) && (pertenece (head xs) ys)
