@@ -28,14 +28,20 @@ likesDePublicacion (_, _, us) = us
 
 -- Predicados 
 
+-- Indica si un valor de entrada es un elemento en una lista determinada.
 pertenece :: Eq t => t -> [t] -> Bool
 pertenece x ys 
         | ys == [] = False
         | x == head ys = True 
         | otherwise = (pertenece x (tail ys)) 
-        
+
+-- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones 
 mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos xs ys 
                 | pertenece (head xs) ys && tail xs == [] = True
                 | pertenece (head xs) ys == False && tail xs == [] = False
                 | otherwise = (mismoselementos (tail xs) ys) && (pertenece (head xs) ys)
+
+-- Provee el elemento final de una lista             
+terminacon :: [t] -> t
+terminacon xs = head (reverse xs)
