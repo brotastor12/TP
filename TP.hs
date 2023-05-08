@@ -33,3 +33,9 @@ pertenece x ys
         | ys == [] = False
         | x == head ys = True 
         | x /= head ys = (pertenece x (tail ys)) 
+        
+mismoselementos :: Eq t => [t] -> [t] -> Bool
+mismoselementos xs ys 
+                | pertenece (head xs) ys == True && tail xs == [] = True
+                | pertenece (head xs) ys == False && tail xs == [] = False
+                | otherwise = (mismoselementos (tail xs) ys) && (pertenece (head xs) ys)
