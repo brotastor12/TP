@@ -45,3 +45,7 @@ mismoselementos xs ys
 -- Provee el elemento final de una lista             
 terminacon :: [t] -> t
 terminacon xs = head (reverse xs)
+
+-- Verifica que tiene id y que tiene nombre 
+usuarioValido :: Usuario -> Bool
+usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
