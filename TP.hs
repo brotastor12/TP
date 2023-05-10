@@ -32,7 +32,7 @@ nombresDeUsuarios red = proyectarNombres (usuarios red)
 
 proyectarNombres :: [Usuario] -> [String]
 proyectarNombres us | sinRepetidos listaNombres = listaNombres
-                    | otherwise = undefined
+                    | otherwise = sacarRepetidos listaNombres
                     where listaNombres = proyectarNombresAux us
 -- proyectarNombres revisa si hay repetidos
 
@@ -66,7 +66,7 @@ terminacon xs = head (reverse xs)
 usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
 
-
+incluido :: Eq t => [t] -> [t] -> Bool
 incluido (x:l1) l2 | pertenece x l2 = incluido l1 l2
                    | otherwise = False
 
@@ -77,3 +77,8 @@ sinRepetidos (x:xs) | pertenece x xs = False
 
 sonDeLaRed :: RedSocial -> [Usuario] -> Bool
 sonDeLaRed red us = incluido us (usuarios red)
+
+sacarRepetidos :: Eq a => [a] -> [a]
+sacarRepetidos [] = []
+sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
+                      | otherwise = x : sacarRepetidos xs
