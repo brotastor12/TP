@@ -35,15 +35,17 @@ pertenece x ys
         | x == head ys = True 
         | otherwise = (pertenece x (tail ys)) 
 
--- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones 
-mismoselementos :: Eq t => [t] -> [t] -> Bool
-mismoselementos l1 l2 = mismoselementosAux l1 l2 && mismoselementosAux l2 l1
+usuarioValido :: Usuario -> Bool
+usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
 
+-- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones 
 mismoselementosAux :: Eq t => [t] -> [t] -> Bool
 mismoselementosAux [x] ys = pertenece x ys
 mismoselementosAux (x:xs) ys
                 | pertenece x ys == False = False
                 | otherwise = mismoselementosAux xs ys && pertenece x ys
+
+mismoselementos l1 l2 = mismoselementosAux l1 l2 && mismoselementosAux l2 l1
 
 -- Provee el elemento final de una lista             
 terminacon :: [t] -> t
