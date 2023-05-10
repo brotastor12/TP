@@ -46,10 +46,10 @@ proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
 
 -- Indica si un valor de entrada es un elemento en una lista determinada.
 pertenece :: Eq t => t -> [t] -> Bool
-pertenece x ys 
-        | ys == [] = False
-        | x == head ys = True 
-        | otherwise = (pertenece x (tail ys)) 
+pertenece _ [] = False
+pertenece x (y:ys)
+        | x == y = True 
+        | otherwise = pertenece x ys
 
 usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
