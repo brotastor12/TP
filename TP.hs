@@ -92,3 +92,17 @@ noHayIdsRepetidosaux (x:xs) = sinRepetidos (x:xs)
 
 noHayIdsRepetidos :: [Usuario] -> Bool
 noHayIdsRepetidos (x:xs) = noHayIdsRepetidosaux (listadeIds (x:xs))
+
+noHayPublicacionesRepetidas :: [Publicacion] -> Bool
+noHayPublicacionesRepetidas pubs = idsListasRepetidos (listaDeLikes pubs) && noHayIdsRepetidos  (listaDeUsuariosPubs pubs)
+
+idsListasRepetidos :: [[Usuario]] -> Bool
+idsListasRepetidos (x:xs) = noHayIdsRepetidos x && idsListasRepetidos xs
+
+listaDeLikes :: [Publicacion] -> [[Usuario]]
+listaDeLikes [] = []
+listaDeLikes (x:xs) = likesDePublicacion x : listaDeLikes xs
+
+listaDeUsuariosPubs :: [Publicacion] -> [Usuario]
+listaDeUsuariosPubs [] = []
+listaDeUsuariosPubs (x:xs) = usuarioDePublicacion x : listaDeUsuariosPubs xs
