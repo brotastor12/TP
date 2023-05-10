@@ -82,3 +82,13 @@ sacarRepetidos :: Eq a => [a] -> [a]
 sacarRepetidos [] = []
 sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
+                      
+listadeIds :: [Usuario] -> [Integer]
+listadeIds [] = []
+listadeIds (x:xs) = idDeUsuario x : listadeIds xs
+
+noHayIdsRepetidosaux :: [Integer] -> Bool
+noHayIdsRepetidosaux (x:xs) = sinRepetidos (x:xs)
+
+noHayIdsRepetidos :: [Usuario] -> Bool
+noHayIdsRepetidos (x:xs) = noHayIdsRepetidosaux (listadeIds (x:xs))
