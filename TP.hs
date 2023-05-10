@@ -26,6 +26,22 @@ usuarioDePublicacion (u, _, _) = u
 likesDePublicacion :: Publicacion -> [Usuario]
 likesDePublicacion (_, _, us) = us
 
+-- Ejercicios
+nombresDeUsuarios :: RedSocial -> [String]
+nombresDeUsuarios red = proyectarNombres (usuarios red)
+
+proyectarNombres :: [Usuario] -> [String]
+proyectarNombres us | sinRepetidos listaNombres = listaNombres
+                    | otherwise = undefined
+                    where listaNombres = proyectarNombresAux us
+-- proyectarNombres revisa si hay repetidos
+
+proyectarNombresAux :: [Usuario] -> [String]
+proyectarNombresAux [] = []
+proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
+
+-- proyectarNombresAux crea una lista con los nombres de usuarios
+
 -- Predicados 
 
 -- Indica si un valor de entrada es un elemento en una lista determinada.
@@ -38,15 +54,9 @@ pertenece x ys
 usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
 
--- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones 
-mismoselementosAux :: Eq t => [t] -> [t] -> Bool
-mismoselementosAux [x] ys = pertenece x ys
-mismoselementosAux (x:xs) ys
-                | pertenece x ys == False = False
-                | otherwise = mismoselementosAux xs ys && pertenece x ys
-                
+-- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones              
 mismoselementos :: Eq t => [t] -> [t] -> Bool
-mismoselementos l1 l2 = mismoselementosAux l1 l2 && mismoselementosAux l2 l1
+mismoselementos l1 l2 = incluido l1 l2 && incluido l2 l1
 
 -- Provee el elemento final de una lista             
 terminacon :: [t] -> t
@@ -57,10 +67,13 @@ usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
 
 
-incluido :: Eq t => [t] -> [t] -> Bool
-incluido [] _ = True
-incluido l1 l2 | pertenece (head l1) l2 = incluido (tail l1) l2
-               | otherwise = False
+incluido (x:l1) l2 | pertenece x l2 = incluido l1 l2
+                   | otherwise = False
+
+sinRepetidos :: Eq t => [t] -> Bool
+sinRepetidos [] = True
+sinRepetidos (x:xs) | pertenece x xs = False
+                    | otherwise = sinRepetidos xs
 
 sonDeLaRed :: RedSocial -> [Usuario] -> Bool
 sonDeLaRed red us = incluido us (usuarios red)
