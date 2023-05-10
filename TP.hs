@@ -44,7 +44,8 @@ mismoselementosAux [x] ys = pertenece x ys
 mismoselementosAux (x:xs) ys
                 | pertenece x ys == False = False
                 | otherwise = mismoselementosAux xs ys && pertenece x ys
-
+                
+mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos l1 l2 = mismoselementosAux l1 l2 && mismoselementosAux l2 l1
 
 -- Provee el elemento final de una lista             
