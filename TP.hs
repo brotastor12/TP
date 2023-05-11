@@ -105,3 +105,7 @@ usuariosValidos us = usuariosValidosAux (us) && noHayIdsRepetidos (us)
 
 empiezaCon :: [t] -> t
 empiezaCon xs = head xs
+ 
+-- funcion de RedSocialValida
+redSocialValida :: Redsocial -> Bool
+redSocialValida (us,rs,ps) = usuariosValidos us && relacionesValidas us rs && publicacionesValidas us ps
