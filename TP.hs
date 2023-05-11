@@ -102,3 +102,6 @@ usuariosValidosAux (x:xs) | usuarioValido (x) == False = False
 usuariosValidos :: [Usuario] -> Bool
 usuariosValidos [] = False
 usuariosValidos us = usuariosValidosAux (us) && noHayIdsRepetidos (us)
+
+empiezaCon :: [t] -> t
+empiezaCon xs = head xs
