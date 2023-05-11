@@ -68,6 +68,11 @@ sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
 
 -- Publicaciones Validas
+publicacionesValidas :: [Usuario] -> [Publicacion] -> Bool
+publicacionesValidas us pubs = incluido (listaDeUsuariosPubs pubs, us) && likeDePublicacionSonUsuariosDeRed us pubs && noHayPublicacionesRepetidas pubs
+
+likeDePublicacionSonUsuariosDeRed :: [Usuario] -> [Publicacion] -> Bool
+likeDePublicacionSonUsuariosDeRed us ((u,pub, likes) : pubs) = incluido likes us && likeDePublicacionSonUsuariosDeRed us pubs
 
 listadeIds :: [Usuario] -> [Integer]
 listadeIds [] = []
@@ -105,7 +110,3 @@ usuariosValidos us = usuariosValidosAux (us) && noHayIdsRepetidos (us)
 
 empiezaCon :: [t] -> t
 empiezaCon xs = head xs
- 
--- funcion de RedSocialValida
-redSocialValida :: Redsocial -> Bool
-redSocialValida (us,rs,ps) = usuariosValidos us && relacionesValidas us rs && publicacionesValidas us ps
