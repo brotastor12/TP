@@ -19,7 +19,7 @@ usuarioDePublicacion (u, _, _) = u
 likesDePublicacion :: Publicacion -> [Usuario]
 likesDePublicacion (_, _, us) = us
 
--- Ejercicios
+-- Ejercicio 1
 nombresDeUsuarios :: RedSocial -> [String]
 nombresDeUsuarios red = proyectarNombres (usuarios red)
 
@@ -32,6 +32,32 @@ proyectarNombresAux :: [Usuario] -> [String]
 proyectarNombresAux [] = []
 proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
 -- proyectarNombresAux crea una lista con los nombres de usuario
+
+-- Ejercicio 2
+amigosDe :: RedSocial -> Usuario -> [Relacion]
+amigosDe red us = sacarRelacionesRepetidas (listaAmigos)
+                where listaAmigos = amigosDeAux (relaciones red) us
+
+sacarRelacionesRepetidas :: [Relacion] -> [Relacion]
+sacarRelacionesRepetidas [] = []
+sacarRelacionesRepetidas (x:xs) | perteneceRelaciones x xs = sacarRelacionesRepetidas xs
+                                | otherwise = x : sacarRelacionesRepetidas xs
+
+perteneceRelaciones :: Relacion -> [Relacion] -> Bool
+perteneceRelaciones _ [] = False
+perteneceRelaciones rel (x:xs) | relacionesIguales rel x = True
+                               | otherwise = perteneceRelaciones rel xs
+
+
+relacionesIguales :: Relacion -> Relacion -> Bool
+relacionesIguales (us1,us2) (us3,us4) = ((us1 == us3) && (us2 == us4)) || ((us1 == us4 && us2 == us3))
+
+
+amigosDeAux :: [Relacion] -> Usuario -> [Relacion]
+amigosDeAux [] _ = []
+amigosDeAux ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : amigosDeAux xs us
+                            | otherwise = amigosDeAux xs us
+
 
 -- Predicados
 
