@@ -58,8 +58,18 @@ amigosDeAux [] _ = []
 amigosDeAux ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : amigosDeAux xs us
                             | otherwise = amigosDeAux xs us
 
+-- Ejercicio 3 
+
+cantidadDeAmigos :: [RedSocial] -> Usuario -> Integer
+cantidadDeAmigos [] _ = 0
+cantidadDeAmigos rc us = longitud (amigosDe rc us)
 
 -- Predicados
+
+-- Determina la longitud de una lista.
+longitud :: (Eq t) => [t] -> Integer
+longitud (x:xs) | (x:xs) == [] = 0
+                | otherwise = longitud xs + 1
 
 -- Indica si un valor de entrada es un elemento en una lista determinada.
 pertenece :: Eq t => t -> [t] -> Bool
