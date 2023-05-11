@@ -69,6 +69,13 @@ sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
 
 -- Publicaciones Validas
 
+publicacionesValidas :: [Usuario] -> [Publicacion] -> Bool
+publicacionesValidas us pubs = incluido (listaDeUsuariosPubs pubs, us) && likeDePublicacionSonUsuariosDeRed us pubs && noHayPublicacionesRepetidas pubs
+
+
+likeDePublicacionSonUsuariosDeRed :: [Usuario] -> [Publicacion] -> Bool
+likeDePublicacionSonUsuariosDeRed us ((u,pub, likes) : pubs) = incluido likes us && likeDePublicacionSonUsuariosDeRed us pubs
+
 listadeIds :: [Usuario] -> [Integer]
 listadeIds [] = []
 listadeIds (x:xs) = idDeUsuario x : listadeIds xs
