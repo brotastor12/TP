@@ -22,6 +22,7 @@ likesDePublicacion (_, _, us) = us
 -- Ejercicios
 nombresDeUsuarios :: RedSocial -> [String]
 nombresDeUsuarios red = proyectarNombres (usuarios red)
+
 proyectarNombres :: [Usuario] -> [String]
 proyectarNombres us | sinRepetidos listaNombres = listaNombres
                     | otherwise = sacarRepetidos listaNombres
@@ -40,8 +41,7 @@ pertenece _ [] = False
 pertenece x (y:ys)
         | x == y = True 
         | otherwise = pertenece x ys
-usuarioValido :: Usuario -> Bool
-usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
+
 -- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones              
 mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos l1 l2 = incluido l1 l2 && incluido l2 l1
@@ -58,16 +58,21 @@ sinRepetidos :: Eq t => [t] -> Bool
 sinRepetidos [] = True
 sinRepetidos (x:xs) | pertenece x xs = False
                     | otherwise = sinRepetidos xs
+                    
 sonDeLaRed :: RedSocial -> [Usuario] -> Bool
 sonDeLaRed red us = incluido us (usuarios red)
+
 sacarRepetidos :: Eq a => [a] -> [a]
 sacarRepetidos [] = []
 sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
-                      
+
+-- Publicaciones Validas
+
 listadeIds :: [Usuario] -> [Integer]
 listadeIds [] = []
 listadeIds (x:xs) = idDeUsuario x : listadeIds xs
+
 noHayIdsRepetidosaux :: [Integer] -> Bool
 noHayIdsRepetidosaux (x:xs) = sinRepetidos (x:xs)
 
