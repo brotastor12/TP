@@ -92,3 +92,13 @@ listaDeLikes (x:xs) = likesDePublicacion x : listaDeLikes xs
 listaDeUsuariosPubs :: [Publicacion] -> [Usuario]
 listaDeUsuariosPubs [] = []
 listaDeUsuariosPubs (x:xs) = usuarioDePublicacion x : listaDeUsuariosPubs xs
+
+--usuariosValidos
+usuariosValidosAux :: [Usuario] -> Bool
+usuariosValidosAux [] = True
+usuariosValidosAux (x:xs) | usuarioValido (x) == False = False
+                          | usuarioValido (x) = usuariosValidosAux (xs)
+
+usuariosValidos :: [Usuario] -> Bool
+usuariosValidos [] = False
+usuariosValidos us = usuariosValidosAux (us) && noHayIdsRepetidos (us)
