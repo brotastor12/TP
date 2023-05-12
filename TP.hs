@@ -74,7 +74,7 @@ cantidadDeAmigos rc us = longitud (amigosDe rc us)
 -- Determina la longitud de una lista.
 longitud :: (Eq t) => [t] -> Integer
 longitud [] = 0
-longitud (x:xs) = otherwise = longitud xs + 1
+longitud (x:xs) = longitud xs + 1
 
 -- Indica si un valor de entrada es un elemento en una lista determinada.
 pertenece :: Eq t => t -> [t] -> Bool
