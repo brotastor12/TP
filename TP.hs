@@ -103,7 +103,11 @@ sacarRepetidos [] = []
 sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
 
+
 -- Publicaciones Validas
+
+publicacionesValidas :: [Usuario] -> [Publicacion] -> Bool
+publicacionesValidas us pubs = incluido (listaDeUsuariosPubs pubs) us && likeDePublicacionSonUsuariosDeRed us pubs && noHayPublicacionesRepetidas pubs
 
 listadeIds :: [Usuario] -> [Integer]
 listadeIds [] = []
@@ -116,10 +120,11 @@ noHayIdsRepetidos :: [Usuario] -> Bool
 noHayIdsRepetidos (x:xs) = noHayIdsRepetidosaux (listadeIds (x:xs))
 
 noHayPublicacionesRepetidas :: [Publicacion] -> Bool
-noHayPublicacionesRepetidas pubs = idsListasRepetidos (listaDeLikes pubs) && noHayIdsRepetidos  (listaDeUsuariosPubs pubs)
+noHayPublicacionesRepetidas pubs = idsListasSinRepetidos (listaDeLikes pubs) && noHayIdsRepetidos  (listaDeUsuariosPubs pubs)
 
-idsListasRepetidos :: [[Usuario]] -> Bool
-idsListasRepetidos (x:xs) = noHayIdsRepetidos x && idsListasRepetidos xs
+idsListasSinRepetidos :: [[Usuario]] -> Bool
+idsListasSinRepetidos [] = True
+idsListasSinRepetidos (x:xs) = noHayIdsRepetidos x && idsListasSinRepetidos xs
 
 listaDeLikes :: [Publicacion] -> [[Usuario]]
 listaDeLikes [] = []
@@ -128,6 +133,12 @@ listaDeLikes (x:xs) = likesDePublicacion x : listaDeLikes xs
 listaDeUsuariosPubs :: [Publicacion] -> [Usuario]
 listaDeUsuariosPubs [] = []
 listaDeUsuariosPubs (x:xs) = usuarioDePublicacion x : listaDeUsuariosPubs xs
+
+
+likeDePublicacionSonUsuariosDeRed :: [Usuario] -> [Publicacion] -> Bool
+likeDePublicacionSonUsuariosDeRed us [] = True
+likeDePublicacionSonUsuariosDeRed us ((u,pub, likes) : pubs) = incluido likes us && likeDePublicacionSonUsuariosDeRed us pubs
+
 
 --usuariosValidos
 usuariosValidosAux :: [Usuario] -> Bool
