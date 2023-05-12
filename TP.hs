@@ -6,16 +6,22 @@ type RedSocial = ([Usuario], [Relacion], [Publicacion])
 -- Funciones basicas
 usuarios :: RedSocial -> [Usuario]
 usuarios (us, _, _) = us
+
 relaciones :: RedSocial -> [Relacion]
 relaciones (_, rs, _) = rs
+
 publicaciones :: RedSocial -> [Publicacion]
 publicaciones (_, _, ps) = ps
+
 idDeUsuario :: Usuario -> Integer
 idDeUsuario (id, _) = id 
+
 nombreDeUsuario :: Usuario -> String
 nombreDeUsuario (_, nombre) = nombre 
+
 usuarioDePublicacion :: Publicacion -> Usuario
 usuarioDePublicacion (u, _, _) = u
+
 likesDePublicacion :: Publicacion -> [Usuario]
 likesDePublicacion (_, _, us) = us
 
@@ -60,16 +66,15 @@ amigosDeAux ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : amigosDeAux xs us
 
 -- Ejercicio 3 
 
-cantidadDeAmigos :: [RedSocial] -> Usuario -> Integer
-cantidadDeAmigos [] _ = 0
+cantidadDeAmigos :: RedSocial -> Usuario -> Integer
 cantidadDeAmigos rc us = longitud (amigosDe rc us)
 
 -- Predicados
 
 -- Determina la longitud de una lista.
 longitud :: (Eq t) => [t] -> Integer
-longitud (x:xs) | (x:xs) == [] = 0
-                | otherwise = longitud xs + 1
+longitud [] = 0
+longitud (x:xs) = longitud xs + 1
 
 -- Indica si un valor de entrada es un elemento en una lista determinada.
 pertenece :: Eq t => t -> [t] -> Bool
@@ -81,12 +86,15 @@ pertenece x (y:ys)
 -- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones              
 mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos l1 l2 = incluido l1 l2 && incluido l2 l1
+
 -- Provee el elemento final de una lista             
 terminacon :: [t] -> t
 terminacon xs = head (reverse xs)
+
 -- Verifica que tiene id y que tiene nombre 
 usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
+
 incluido :: Eq t => [t] -> [t] -> Bool
 incluido (x:l1) l2 | pertenece x l2 = incluido l1 l2
                    | otherwise = False
