@@ -64,6 +64,17 @@ cantidadDeAmigos :: [RedSocial] -> Usuario -> Integer
 cantidadDeAmigos [] _ = 0
 cantidadDeAmigos rc us = longitud (amigosDe rc us)
 
+-- ejercicio 6
+publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
+publicacionesDe red us = sacarRepetidos (publicacionesDeAux (publicaciones red) us)
+
+
+publicacionesDeAux :: [Publicacion] -> Usuario -> [Publicacion]
+publicacionesDeAux [] _ = []
+publicacionesDeAux (x:xs) us | usuarioDePublicacion x == us = x : publicacionesDeAux xs us
+                             | otherwise = publicacionesDeAux xs us
+--La funcion auxiliar crea la lista de publicaciones del usuario y publicacionesDe saca los repetidos
+
 -- Predicados
 
 -- Determina la longitud de una lista.
