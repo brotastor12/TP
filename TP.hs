@@ -179,8 +179,39 @@ usuariosValidos [] = False
 usuariosValidos us = usuariosValidosAux (us) && noHayIdsRepetidos (us)
 
 empiezaCon :: [t] -> t
-empiezaCon xs = head xs
- 
+empiezaCon xs = head xs 
+
 -- funcion de RedSocialValida
-redSocialValida :: Redsocial -> Bool
+redSocialValida :: RedSocial -> Bool
 redSocialValida (us,rs,ps) = usuariosValidos us && relacionesValidas us rs && publicacionesValidas us ps
+
+-- Relaciones Validas
+
+usuariosIguales :: Usuario -> Usuario -> Bool
+usuariosIguales us1 us2 = idDeUsuario us1 == idDeUsuario us2 && nombreDeUsuario us1 == nombreDeUsuario us2
+
+
+relacionesAsimetricas :: [Relacion] -> Bool
+relacionesAsimetricas [] = True
+relacionesAsimetricas (x : xs)  | pertenece (reverseRelacion x) xs = False 
+                                | otherwise = relacionesAsimetricas xs  
+
+
+reverseRelacion :: Relacion -> Relacion
+reverseRelacion (us1,us2) = (us2,us1)
+
+
+usuariosDeRelacionValidos :: [Usuario] -> [Relacion] -> Bool
+usuariosDeRelacionValidos _ [] = True
+usuariosDeRelacionValidos us (x : xs) = pertenece (fst x) us && pertenece (snd x) us && relacionValida x && usuariosDeRelacionValidos us xs
+
+
+relacionValida :: Relacion -> Bool
+relacionValida (us1,us2) | usuariosIguales us1 us2 = False
+                         | otherwise = True
+
+relacionesValidas :: [Usuario] -> [Relacion] -> Bool
+relacionesValidas [] _ = False
+relacionesValidas _ [] = False 
+relacionesValidas us rs = relacionesAsimetricas rs && sinRepetidos rs && usuariosDeRelacionValidos us rs
+
