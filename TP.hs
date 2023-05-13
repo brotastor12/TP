@@ -69,6 +69,16 @@ amigosDeAux ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : amigosDeAux xs us
 cantidadDeAmigos :: RedSocial -> Usuario -> Integer
 cantidadDeAmigos rc us = longitud (amigosDe rc us)
 
+-- Ejercicio 5 (Falta un poco mas de testing) 
+
+estaRobertoCarlos :: RedSocial -> Bool
+estaRobertoCarlos red = estaRobertoCarlosAux red (usuarios red)
+
+estaRobertoCarlosAux :: RedSocial -> [Usuario] -> Bool
+estaRobertoCarlosAux _ [] = False
+estaRobertoCarlosAux red (x:xs) | (cantidadDeAmigos red x) > 10 = True
+                            | otherwise = estaRobertoCarlosAux red xs
+                            
 -- ejercicio 6
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
 publicacionesDe red us = sacarRepetidos (publicacionesDeAux (publicaciones red) us)
