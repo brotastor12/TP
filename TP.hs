@@ -69,6 +69,19 @@ amigosDeAux ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : amigosDeAux xs us
 cantidadDeAmigos :: RedSocial -> Usuario -> Integer
 cantidadDeAmigos rc us = longitud (amigosDe rc us)
 
+-- Ejercicio 4 
+usuarioConMasAmigos :: RedSocial -> Usuario
+usuarioConMasAmigos red = usuarioConMasAmigosAux red (usuarios red)
+
+comparacionAmigos :: RedSocial -> Usuario -> Usuario -> Usuario
+comparacionAmigos red x y | (cantidadDeAmigos red x) > (cantidadDeAmigos red y) = x
+                          | otherwise = y
+
+usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario
+usuarioConMasAmigosAux red (x:y:xs) | longitud (x:y:xs) == 1 = x
+                                    | comparacionAmigos red x y == x = usuarioConMasAmigosAux red (x:xs)
+                                    | comparacionAmigos red x y == y = usuarioConMasAmigosAux red (y:xs)
+                                    
 -- Ejercicio 5 (Falta un poco mas de testing) 
 
 estaRobertoCarlos :: RedSocial -> Bool
