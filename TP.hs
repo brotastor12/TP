@@ -112,6 +112,10 @@ publicacionesQueLeGustanAAux [] _ = []
 publicacionesQueLeGustanAAux (x:xs) us | pertenece us (likesDePublicacion x) = x : publicacionesQueLeGustanAAux xs us
                                        | otherwise = publicacionesQueLeGustanAAux xs us
 
+-- Ejercicio 8
+lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
+lesGustanLasMismasPublicaciones red u1 u2 = (mismoselementos (publicacionesQueLeGustanA red u1) (publicacionesQueLeGustanA red u2))
+
 -- Predicados
 
 -- Determina la longitud de una lista.
