@@ -116,6 +116,19 @@ publicacionesQueLeGustanAAux (x:xs) us | pertenece us (likesDePublicacion x) = x
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
 lesGustanLasMismasPublicaciones red u1 u2 = (mismoselementos (publicacionesQueLeGustanA red u1) (publicacionesQueLeGustanA red u2))
 
+--Ejercicio 9
+tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
+tieneUnSeguidorFiel red us | publicacionesDe red us /= [] = tieneUnSeguidorFielAux red (usuarios red) us
+
+tieneUnSeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
+tieneUnSeguidorFielAux red [] us = False
+tieneUnSeguidorFielAux red (seguidor:xs) us | seguidor == us = tieneUnSeguidorFielAux red xs us
+                                            | esFiel red us seguidor = True
+                                            | otherwise = tieneUnSeguidorFielAux red xs us
+
+esFiel :: RedSocial -> Usuario -> Usuario -> Bool
+esFiel red us seguidor = incluido (publicacionesDe red us) (publicacionesQueLeGustanA red seguidor)
+
 -- Predicados
 
 -- Determina la longitud de una lista.
