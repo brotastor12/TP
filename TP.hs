@@ -171,6 +171,11 @@ sacarRepetidos [] = []
 sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
 
+cadenaDeAmigos :: [Usuario] -> RedSocial -> Bool
+cadenaDeAmigos (x:y:xs) red = relacionadosDirecto x y red && cadenaDeAmigos (y:xs) red
+
+relacionadosDirecto :: Usuario -> Usuario -> RedSocial -> Bool
+relacionadosDirecto u1 u2 red = pertenece (u1, u2) (relaciones red)
 
 -- Publicaciones Validas
 
