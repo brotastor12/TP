@@ -40,28 +40,14 @@ proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
 -- proyectarNombresAux crea una lista con los nombres de usuario
 
 -- Ejercicio 2
-amigosDe :: RedSocial -> Usuario -> [Relacion]
-amigosDe red us = sacarRelacionesRepetidas (listaAmigos)
+amigosDe :: RedSocial -> Usuario -> [Usuario]
+amigosDe red us = sacarRepetidos (listaAmigos)
                 where listaAmigos = amigosDeAux (relaciones red) us
 
-sacarRelacionesRepetidas :: [Relacion] -> [Relacion]
-sacarRelacionesRepetidas [] = []
-sacarRelacionesRepetidas (x:xs) | perteneceRelaciones x xs = sacarRelacionesRepetidas xs
-                                | otherwise = x : sacarRelacionesRepetidas xs
-
-perteneceRelaciones :: Relacion -> [Relacion] -> Bool
-perteneceRelaciones _ [] = False
-perteneceRelaciones rel (x:xs) | relacionesIguales rel x = True
-                               | otherwise = perteneceRelaciones rel xs
-
-
-relacionesIguales :: Relacion -> Relacion -> Bool
-relacionesIguales (us1,us2) (us3,us4) = ((us1 == us3) && (us2 == us4)) || ((us1 == us4 && us2 == us3))
-
-
-amigosDeAux :: [Relacion] -> Usuario -> [Relacion]
+amigosDeAux :: [Relacion] -> Usuario -> [Usuario]
 amigosDeAux [] _ = []
-amigosDeAux ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : amigosDeAux xs us
+amigosDeAux ((r1,r2):xs) us | r1 == us && r2 /= us = r2 : amigosDeAux xs us
+                            | r2 == us && r1 /= us = r1 : amigosDeAux xs us
                             | otherwise = amigosDeAux xs us
 
 -- Ejercicio 3 
@@ -156,8 +142,10 @@ usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
 
 incluido :: Eq t => [t] -> [t] -> Bool
+incluido [] _ = []
 incluido (x:l1) l2 | pertenece x l2 = incluido l1 l2
                    | otherwise = False
+
 sinRepetidos :: Eq t => [t] -> Bool
 sinRepetidos [] = True
 sinRepetidos (x:xs) | pertenece x xs = False
