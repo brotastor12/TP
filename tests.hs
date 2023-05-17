@@ -4,9 +4,19 @@ import TP
 
 run = runTestTT tests
 
-tests = test [
-    " nombresDeUsuarios devuelve los nombres de usuarios de la red" ~: nombresDeUsuarios red1 ~?= ["Pablo", "Juan", "Juana", "Valentina"]]
+tests = test (testNombresDeUsuarios ++ testAmigosDe ++ testCantidadDeAmigos)
 
+testNombresDeUsuarios = [
+    " devuelve los nombres de usuarios de la red" ~: nombresDeUsuarios red1 ~?= ["Pablo", "Juan", "Juana", "Valentina"],
+    " no devuelve repetidos" ~: nombresDeUsuarios red2 ~?= ["Pablo", "Juan"],
+    " una red sin ususarios devuelve []" ~: nombresDeUsuarios redVacia ~?= []]
+
+testAmigosDe = [
+    " devuelve todos los amigos del usuario" ~: amigosDe red1 usuario1 ~?= [usuario3, usuario4],
+    " un usuario sin amigos devuelve []" ~: amigosDe red2 usuario4 ~?= []]
+
+testCantidadDeAmigos = [
+    " devuelve la cantidad de amigos del usuario" ~: cantidadDeAmigos red1 usuario1 ~?= 2]
 usuario1 :: Usuario
 usuario1 = (1, "Pablo")
 
@@ -30,9 +40,13 @@ relacion2 :: Relacion
 relacion2 = (usuario2, usuario3)
 relacion3 :: Relacion
 relacion3 = (usuario1, usuario4)
+relacion4 :: Relacion
+relacion4 = (usuario2, usuario1)
 
 relaciones1 :: [Relacion]
-relaciones1 = [relacion1, relacion2, relacion3]
+relaciones1 = [relacion1, relacion2, relacion3, relacion4]
+relaciones2 :: [Relacion]
+relaciones2 = [relacion1, relacion2]
 
 publicacion1_us1 :: Publicacion
 publicacion1_us1 = (usuario1, "primer post", [])
@@ -52,5 +66,7 @@ publicaciones1 = [publicacion3_us2, publicacion2_us2, publicacion1_us2, publicac
 
 red1 :: RedSocial
 red1 = (usuarios1, relaciones1, publicaciones1)
+red2 :: RedSocial
+red2 = (usuariosRepetidos, relaciones2, [])
 redVacia :: RedSocial
 redVacia = ([], [], [])
