@@ -1,3 +1,4 @@
+module Solucion where
 type Usuario = (Integer, String) -- (id, nombre)
 type Relacion = (Usuario, Usuario) -- usuarios que se relacionan
 type Publicacion = (Usuario, String, [Usuario]) -- (usuario que publica, texto publicacion, likes)
@@ -64,8 +65,8 @@ comparacionAmigos red x y | (cantidadDeAmigos red x) > (cantidadDeAmigos red y) 
                           | otherwise = y
 
 usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario
-usuarioConMasAmigosAux red (x:y:xs) | longitud (x:y:xs) == 1 = x
-                                    | comparacionAmigos red x y == x = usuarioConMasAmigosAux red (x:xs)
+usuarioConMasAmigosAux _ [x] = x
+usuarioConMasAmigosAux red (x:y:xs) | comparacionAmigos red x y == x = usuarioConMasAmigosAux red (x:xs)
                                     | comparacionAmigos red x y == y = usuarioConMasAmigosAux red (y:xs)
                                     
 -- Ejercicio 5 (Falta un poco mas de testing) 
@@ -115,6 +116,28 @@ tieneUnSeguidorFielAux red (seguidor:xs) us | seguidor == us = tieneUnSeguidorFi
 esFiel :: RedSocial -> Usuario -> Usuario -> Bool
 esFiel red us seguidor = incluido (publicacionesDe red us) (publicacionesQueLeGustanA red seguidor)
 
+-- Ejercicio 10
+existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
+existeSecuenciaDeAmigos red us1 us2 = existeSecuenciaDeAmigosAux red (usuarios red) us1 us2
+
+existeSecuenciaDeAmigosAux :: RedSocial -> [Usuario] -> Usuario -> Usuario -> Bool
+existeSecuenciaDeAmigosAux red us u1 u2 = cadenaDeAmigos z red && empiezaCon u1 z && terminaCon u2 z
+                                                where z = (armarCadena us u1 u2)
+
+armarCadena :: [Usuario] -> Usuario -> Usuario -> [Usuario]
+armarCadena (x:xs) u1 u2 | longitud (x:xs) <= 2 = (x:xs)
+                         | x == u1 && terminaCon u2 (x:xs) = (x:xs)
+                         | x /= u1 = armarCadena xs u1 u2
+                         | otherwise = armarCadena (quitarUltimo (x:xs)) u1 u2
+
+quitarUltimo :: (Eq t) => [t] ->[t]
+quitarUltimo ls = quitar (ultimo ls) ls
+
+{- armarCadena intenta crear una lista de usuarios donde us1 sea el primer elemento y us2 sea el ultimo elemento, en caso de no ser
+posible, da una cadena de dos usuarios que puede ser o no una cadena donde esten us1 y us2. Si estan o no o si siguen o no el orden que 
+preferimos que sigan no importa porque esas condiciones las va a verificar existeSecuenciaDeAmigosAux y en base a eso tendremos la
+respuesta. -}
+
 -- Predicados
 
 -- Determina la longitud de una lista.
@@ -129,20 +152,23 @@ pertenece x (y:ys)
         | x == y = True 
         | otherwise = pertenece x ys
 
+sonAmigos :: Relacion -> RedSocial -> Bool
+sonAmigos (u1, u2) red = pertenece (u1,u2) (relaciones red) || pertenece (u2,u1) (relaciones red)
+
 -- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones              
 mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos l1 l2 = incluido l1 l2 && incluido l2 l1
 
--- Provee el elemento final de una lista             
-terminacon :: [t] -> t
-terminacon xs = head (reverse xs)
+-- Verifica si entre un x cualquiera y una lista, ese x es el elemento final de la lista
+terminaCon :: Eq t => t -> [t] -> Bool
+terminaCon y xs = y == ultimo xs
 
 -- Verifica que tiene id y que tiene nombre 
 usuarioValido :: Usuario -> Bool
 usuarioValido u = idDeUsuario u > 0 && (length (nombreDeUsuario u)) > 0
 
 incluido :: Eq t => [t] -> [t] -> Bool
-incluido [] _ = []
+incluido [] _ = True
 incluido (x:l1) l2 | pertenece x l2 = incluido l1 l2
                    | otherwise = False
 
@@ -160,91 +186,29 @@ sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
 
 cadenaDeAmigos :: [Usuario] -> RedSocial -> Bool
-cadenaDeAmigos (x:y:xs) red = relacionadosDirecto x y red && cadenaDeAmigos (y:xs) red
+cadenaDeAmigos [] _ = False
+cadenaDeAmigos [x] _ = False
+cadenaDeAmigos [x,y] red = sonAmigos (x,y) red
+cadenaDeAmigos (x:y:xs) red | sonAmigos (x,y) red = cadenaDeAmigos (y:xs) red
+                            | otherwise = False
 
-relacionadosDirecto :: Usuario -> Usuario -> RedSocial -> Bool
-relacionadosDirecto u1 u2 red = pertenece (u1, u2) (relaciones red)
+quitar :: Eq t => t -> [t] -> [t]
+quitar _ [] = []
+quitar y (x:xs)
+        | y == x = xs
+        | y /= x = (x : (quitar y xs))
 
--- Publicaciones Validas
+quitartodos :: Eq t => t -> [t] -> [t]
+quitartodos y (x:xs) | pertenece y (x:xs) == True = quitartodos y (quitar y xs)
+                     | otherwise = (x:xs)
 
-publicacionesValidas :: [Usuario] -> [Publicacion] -> Bool
-publicacionesValidas us pubs = incluido (listaDeUsuariosPubs pubs) us && likeDePublicacionSonUsuariosDeRed us pubs && noHayPublicacionesRepetidas pubs
+empiezaCon :: Eq t => t -> [t] -> Bool
+empiezaCon _ [] = False
+empiezaCon y (x:xs) | (x == y) = True
+                    | otherwise = False
 
-listadeIds :: [Usuario] -> [Integer]
-listadeIds [] = []
-listadeIds (x:xs) = idDeUsuario x : listadeIds xs
-
-noHayIdsRepetidosaux :: [Integer] -> Bool
-noHayIdsRepetidosaux (x:xs) = sinRepetidos (x:xs)
-
-noHayIdsRepetidos :: [Usuario] -> Bool
-noHayIdsRepetidos (x:xs) = noHayIdsRepetidosaux (listadeIds (x:xs))
-
-noHayPublicacionesRepetidas :: [Publicacion] -> Bool
-noHayPublicacionesRepetidas pubs = idsListasSinRepetidos (listaDeLikes pubs) && noHayIdsRepetidos  (listaDeUsuariosPubs pubs)
-
-idsListasSinRepetidos :: [[Usuario]] -> Bool
-idsListasSinRepetidos [] = True
-idsListasSinRepetidos (x:xs) = noHayIdsRepetidos x && idsListasSinRepetidos xs
-
-listaDeLikes :: [Publicacion] -> [[Usuario]]
-listaDeLikes [] = []
-listaDeLikes (x:xs) = likesDePublicacion x : listaDeLikes xs
-
-listaDeUsuariosPubs :: [Publicacion] -> [Usuario]
-listaDeUsuariosPubs [] = []
-listaDeUsuariosPubs (x:xs) = usuarioDePublicacion x : listaDeUsuariosPubs xs
-
-
-likeDePublicacionSonUsuariosDeRed :: [Usuario] -> [Publicacion] -> Bool
-likeDePublicacionSonUsuariosDeRed us [] = True
-likeDePublicacionSonUsuariosDeRed us ((u,pub, likes) : pubs) = incluido likes us && likeDePublicacionSonUsuariosDeRed us pubs
-
-
---usuariosValidos
-usuariosValidosAux :: [Usuario] -> Bool
-usuariosValidosAux [] = True
-usuariosValidosAux (x:xs) | usuarioValido (x) == False = False
-                          | usuarioValido (x) = usuariosValidosAux (xs)
-
-usuariosValidos :: [Usuario] -> Bool
-usuariosValidos [] = False
-usuariosValidos us = usuariosValidosAux (us) && noHayIdsRepetidos (us)
-
-empiezaCon :: [t] -> t
-empiezaCon xs = head xs 
-
--- funcion de RedSocialValida
-redSocialValida :: RedSocial -> Bool
-redSocialValida (us,rs,ps) = usuariosValidos us && relacionesValidas us rs && publicacionesValidas us ps
-
--- Relaciones Validas
-
-usuariosIguales :: Usuario -> Usuario -> Bool
-usuariosIguales us1 us2 = idDeUsuario us1 == idDeUsuario us2 && nombreDeUsuario us1 == nombreDeUsuario us2
-
-
-relacionesAsimetricas :: [Relacion] -> Bool
-relacionesAsimetricas [] = True
-relacionesAsimetricas (x : xs)  | pertenece (reverseRelacion x) xs = False 
-                                | otherwise = relacionesAsimetricas xs  
-
-
-reverseRelacion :: Relacion -> Relacion
-reverseRelacion (us1,us2) = (us2,us1)
-
-
-usuariosDeRelacionValidos :: [Usuario] -> [Relacion] -> Bool
-usuariosDeRelacionValidos _ [] = True
-usuariosDeRelacionValidos us (x : xs) = pertenece (fst x) us && pertenece (snd x) us && relacionValida x && usuariosDeRelacionValidos us xs
-
-
-relacionValida :: Relacion -> Bool
-relacionValida (us1,us2) | usuariosIguales us1 us2 = False
-                         | otherwise = True
-
-relacionesValidas :: [Usuario] -> [Relacion] -> Bool
-relacionesValidas [] _ = False
-relacionesValidas _ [] = False 
-relacionesValidas us rs = relacionesAsimetricas rs && sinRepetidos rs && usuariosDeRelacionValidos us rs
+ultimo :: [t] -> t
+ultimo [] = undefined
+ultimo [x] = x
+ultimo (x:xs) = ultimo xs
 
