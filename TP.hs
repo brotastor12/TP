@@ -148,6 +148,9 @@ pertenece x (y:ys)
         | x == y = True 
         | otherwise = pertenece x ys
 
+perteneceRelacion :: Relacion -> RedSocial -> Bool
+perteneceRelacion rel red = pertenece rel (relaciones red) || pertenece (reverseRelacion rel) (relaciones red)
+
 -- Indica si una lista contiene los mismos elementos sin importar el orden ni las repeticiones              
 mismoselementos :: Eq t => [t] -> [t] -> Bool
 mismoselementos l1 l2 = incluido l1 l2 && incluido l2 l1
@@ -179,10 +182,10 @@ sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
 
 cadenaDeAmigos :: [Usuario] -> RedSocial -> Bool
-cadenaDeAmigos (x:y:xs) red = relacionadosDirecto x y red && cadenaDeAmigos (y:xs) red
-
-relacionadosDirecto :: Usuario -> Usuario -> RedSocial -> Bool
-relacionadosDirecto u1 u2 red = pertenece (u1, u2) (relaciones red) || pertenece (u2, u1) (relaciones red) 
+cadenaDeAmigos [] _ = False
+cadenaDeAmigos (x:y:xs) red | perteneceRelacion (x,y) red && longitud (y:xs) == 1 = True
+                            | perteneceRelacion (x,y) red == False = False
+                            | longitud (x:y:xs) /= 1 && perteneceRelacion (x,y) red = cadenaDeAmigos (y:xs) red
 
 quitar :: Eq t => t -> [t] -> [t]
 quitar y (x:xs)
