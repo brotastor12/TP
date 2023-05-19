@@ -1,4 +1,11 @@
 module Solucion where
+
+-- Nombre de Grupo: xx
+-- Integrante 1: Astor Martinez Belizzi, astormbelizzi@gmail.com, 781/21
+-- Integrante 2: Nombre Apellido, email, LU
+-- Integrante 3: Nombre Apellido, email, LU
+-- Integrante 4: Nombre Apellido, email, LU
+
 type Usuario = (Integer, String) -- (id, nombre)
 type Relacion = (Usuario, Usuario) -- usuarios que se relacionan
 type Publicacion = (Usuario, String, [Usuario]) -- (usuario que publica, texto publicacion, likes)
@@ -47,8 +54,8 @@ amigosDe red us = sacarRepetidos (listaAmigos)
 
 amigosDeAux :: [Relacion] -> Usuario -> [Usuario]
 amigosDeAux [] _ = []
-amigosDeAux ((r1,r2):xs) us | r1 == us && r2 /= us = r2 : amigosDeAux xs us
-                            | r2 == us && r1 /= us = r1 : amigosDeAux xs us
+amigosDeAux ((r1,r2):xs) us | r1 == us = r2 : amigosDeAux xs us
+                            | r2 == us = r1 : amigosDeAux xs us
                             | otherwise = amigosDeAux xs us
 
 -- Ejercicio 3 
@@ -64,10 +71,11 @@ comparacionAmigos :: RedSocial -> Usuario -> Usuario -> Usuario
 comparacionAmigos red x y | (cantidadDeAmigos red x) > (cantidadDeAmigos red y) = x
                           | otherwise = y
 
-usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario
+usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario     
+usuarioConMasAmigosAux _ [] = undefined
 usuarioConMasAmigosAux _ [x] = x
-usuarioConMasAmigosAux red (x:y:xs) | comparacionAmigos red x y == x = usuarioConMasAmigosAux red (x:xs)
-                                    | comparacionAmigos red x y == y = usuarioConMasAmigosAux red (y:xs)
+usuarioConMasAmigosAux red (x:y:xs) = usuarioConMasAmigosAux red (masAmigosxy : xs)                       
+                                    where masAmigosxy = comparacionAmigos red x y
                                     
 -- Ejercicio 5 (Falta un poco mas de testing) 
 
