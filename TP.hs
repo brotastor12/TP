@@ -2,7 +2,7 @@ module Solucion where
 
 -- Nombre de Grupo: xx
 -- Integrante 1: Astor Martinez Belizzi, astormbelizzi@gmail.com, 781/21
--- Integrante 2: Nombre Apellido, email, LU
+-- Integrante 2: Gonzalo Nicolas Moreira Valdez, gn.moreiravaldez@gmail.com, 712/23
 -- Integrante 3: Iván Alejandro Miguel Viola, ivanmiguelviola@gmail.com, 711/23
 -- Integrante 4: Nombre Apellido, email, LU
 
