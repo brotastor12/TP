@@ -2,8 +2,8 @@ module Solucion where
 
 -- Nombre de Grupo: xx
 -- Integrante 1: Astor Martinez Belizzi, astormbelizzi@gmail.com, 781/21
--- Integrante 2: Gonzalo Nicolas Moreira Valdez, gn.moreiravaldez@gmail.com, 712/23
--- Integrante 3: Iván Alejandro Miguel Viola, ivanmiguelviola@gmail.com, 711/23
+-- Integrante 2: Nombre Apellido, email, LU
+-- Integrante 3: Nombre Apellido, email, LU
 -- Integrante 4: Nombre Apellido, email, LU
 
 type Usuario = (Integer, String) -- (id, nombre)
@@ -42,6 +42,7 @@ proyectarNombres us | sinRepetidos listaNombres = listaNombres
                     | otherwise = sacarRepetidos listaNombres
                     where listaNombres = proyectarNombresAux us
 -- proyectarNombres revisa si hay repetidos
+
 proyectarNombresAux :: [Usuario] -> [String]
 proyectarNombresAux [] = []
 proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
@@ -71,12 +72,14 @@ comparacionAmigos :: RedSocial -> Usuario -> Usuario -> Usuario
 comparacionAmigos red x y | (cantidadDeAmigos red x) > (cantidadDeAmigos red y) = x
                           | otherwise = y
 
-usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario     
+usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario
 usuarioConMasAmigosAux _ [x] = x
 usuarioConMasAmigosAux red (x:y:xs) = usuarioConMasAmigosAux red (masAmigosxy : xs)                       
                                     where masAmigosxy = comparacionAmigos red x y
-                                    
--- Ejercicio 5 
+{- usuarioConMasAmigosAux compara quien tiene mas amigos entre los primeros 2 elementos y hace una recursion 
+   mantniendo el mas grande en la cabecera. Al final de la recursion solo queda el usuario con mas amigos-}
+
+-- Ejercicio 5
 
 estaRobertoCarlos :: RedSocial -> Bool
 estaRobertoCarlos red = estaRobertoCarlosAux red (usuarios red)
@@ -84,8 +87,8 @@ estaRobertoCarlos red = estaRobertoCarlosAux red (usuarios red)
 estaRobertoCarlosAux :: RedSocial -> [Usuario] -> Bool
 estaRobertoCarlosAux _ [] = False
 estaRobertoCarlosAux red (x:xs) | (cantidadDeAmigos red x) > 10 = True
-                            | otherwise = estaRobertoCarlosAux red xs
-                            
+                                | otherwise = estaRobertoCarlosAux red xs
+
 -- ejercicio 6
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
 publicacionesDe red us = sacarRepetidos (publicacionesDeAux (publicaciones red) us)
@@ -95,7 +98,7 @@ publicacionesDeAux :: [Publicacion] -> Usuario -> [Publicacion]
 publicacionesDeAux [] _ = []
 publicacionesDeAux (x:xs) us | usuarioDePublicacion x == us = x : publicacionesDeAux xs us
                              | otherwise = publicacionesDeAux xs us
---La funcion auxiliar crea la lista de publicaciones del usuario
+--La funcion auxiliar crea la lista de publicaciones del usuario y publicacionesDe saca los repetidos
 
 -- Ejercicio 7
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
@@ -119,9 +122,12 @@ tieneUnSeguidorFielAux red [] us = False
 tieneUnSeguidorFielAux red (seguidor:xs) us | seguidor == us = tieneUnSeguidorFielAux red xs us
                                             | esFiel red us seguidor = True
                                             | otherwise = tieneUnSeguidorFielAux red xs us
+-- Revisa si us tiene un seguidor fiel con una recursion y si lo encuentra devuelve True. 
+-- Si termina la recursion sin encontrar uno da False
 
 esFiel :: RedSocial -> Usuario -> Usuario -> Bool
 esFiel red us seguidor = incluido (publicacionesDe red us) (publicacionesQueLeGustanA red seguidor)
+-- Seguidor es fiel si le dio like a todas las publicaciones del us
 
 -- Ejercicio 10
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
