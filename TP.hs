@@ -139,7 +139,8 @@ existeSecuenciaDeAmigosAux :: RedSocial -> [Usuario] -> Usuario -> Usuario -> Bo
 existeSecuenciaDeAmigosAux red us u1 u2 = cadenaDeAmigos z red && empiezaCon u1 z && terminaCon u2 z
                                                 where z = (armarCadena us u1 u2)
 
--- Crea una lista de usuarios donde us1 sea el primer elemento y us2 el ultimo, si no se cumplen las condiciones da la primera lista de longitud de dos usuarios o menos que encuentre
+-- Crea una lista de usuarios con los usuarios entre us1 y us2 inclusive
+-- Si no se cumplen las condiciones, remueve elementos de la lista recursivamente hasta que se cumplan o que se genere una lista de longitud menor o igual a 2
 armarCadena :: [Usuario] -> Usuario -> Usuario -> [Usuario]
 armarCadena (x:xs) u1 u2 | longitud (x:xs) <= 2 = (x:xs)
                          | x == u1 && terminaCon u2 (x:xs) = (x:xs)
