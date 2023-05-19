@@ -49,8 +49,7 @@ proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
 
 -- Ejercicio 2
 amigosDe :: RedSocial -> Usuario -> [Usuario]
-amigosDe red us = sacarRepetidos (listaAmigos)
-                where listaAmigos = amigosDeAux (relaciones red) us
+amigosDe red us = amigosDeAux (relaciones red) us
 
 amigosDeAux :: [Relacion] -> Usuario -> [Usuario]
 amigosDeAux [] _ = []
@@ -88,7 +87,7 @@ estaRobertoCarlosAux red (x:xs) | (cantidadDeAmigos red x) > 10 = True
                             
 -- ejercicio 6
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
-publicacionesDe red us = sacarRepetidos (publicacionesDeAux (publicaciones red) us)
+publicacionesDe red us = publicacionesDeAux (publicaciones red) us
 
 
 publicacionesDeAux :: [Publicacion] -> Usuario -> [Publicacion]
@@ -124,13 +123,17 @@ esFiel :: RedSocial -> Usuario -> Usuario -> Bool
 esFiel red us seguidor = incluido (publicacionesDe red us) (publicacionesQueLeGustanA red seguidor)
 
 -- Ejercicio 10
+
+-- Verifica si existe una cadena de amigos como la planteada en cadenaDeAmigos entre usuarios que le demos
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
 existeSecuenciaDeAmigos red us1 us2 = existeSecuenciaDeAmigosAux red (usuarios red) us1 us2
 
+-- Verifica que para la lista creada en armarCadena, haya una cadena de amigos y que esta tambien empiece con el usuario 1 y termine con el usuario 2. 
 existeSecuenciaDeAmigosAux :: RedSocial -> [Usuario] -> Usuario -> Usuario -> Bool
 existeSecuenciaDeAmigosAux red us u1 u2 = cadenaDeAmigos z red && empiezaCon u1 z && terminaCon u2 z
                                                 where z = (armarCadena us u1 u2)
 
+-- Crea una lista de usuarios donde us1 sea el primer elemento y us2 el ultimo, si no se cumplen las condiciones da la primera lista de longitud de dos usuarios o menos que encuentre
 armarCadena :: [Usuario] -> Usuario -> Usuario -> [Usuario]
 armarCadena (x:xs) u1 u2 | longitud (x:xs) <= 2 = (x:xs)
                          | x == u1 && terminaCon u2 (x:xs) = (x:xs)
@@ -140,10 +143,7 @@ armarCadena (x:xs) u1 u2 | longitud (x:xs) <= 2 = (x:xs)
 quitarUltimo :: (Eq t) => [t] ->[t]
 quitarUltimo ls = quitar (ultimo ls) ls
 
-{- armarCadena intenta crear una lista de usuarios donde us1 sea el primer elemento y us2 sea el ultimo elemento, en caso de no ser
-posible, da una cadena de dos usuarios que puede ser o no una cadena donde esten us1 y us2. Si estan o no o si siguen o no el orden que 
-preferimos que sigan no importa porque esas condiciones las va a verificar existeSecuenciaDeAmigosAux y en base a eso tendremos la
-respuesta. -}
+
 
 -- Predicados
 
@@ -192,6 +192,7 @@ sacarRepetidos [] = []
 sacarRepetidos (x:xs) | pertenece x xs = sacarRepetidos xs
                       | otherwise = x : sacarRepetidos xs
 
+-- Verifica si en la lista de usuarios hay relaciones en cadena, es decir us1 con us2, us2 con us3, us3 con us4 y asi sucesivamente
 cadenaDeAmigos :: [Usuario] -> RedSocial -> Bool
 cadenaDeAmigos [] _ = False
 cadenaDeAmigos [x] _ = False
