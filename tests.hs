@@ -8,7 +8,7 @@ tests = test (testNombresDeUsuarios ++ testAmigosDe ++ testCantidadDeAmigos ++ t
 
 --Ejercicio 1
 testNombresDeUsuarios = [
-    " devuelve los nombres de usuarios de la red" ~: nombresDeUsuarios red1 ~?= ["Pablo", "Juan", "Juana", "Valentina"],
+    " devuelve los nombres de usuarios de la red sin repetidos" ~: nombresDeUsuarios red1 ~?= ["Pablo", "Juana", "Valentina", "Juan"],
     " una red sin ususarios devuelve []" ~: nombresDeUsuarios redVacia ~?= []]
 
 -- Ejercicio 2
@@ -65,10 +65,12 @@ usuario3 :: Usuario
 usuario3 = (3, "Juana")
 usuario4 :: Usuario
 usuario4 = (4, "Valentina")
+usuario5R :: Usuario
+usuario5R = (5, "Juan")
 
 
 usuarios1 :: [Usuario]
-usuarios1 = [usuario1, usuario2, usuario3, usuario4]
+usuarios1 = [usuario1, usuario2, usuario3, usuario4, usuario5R]
 
 relacion1 :: Relacion
 relacion1 = (usuario1, usuario3)
