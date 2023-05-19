@@ -72,12 +72,11 @@ comparacionAmigos red x y | (cantidadDeAmigos red x) > (cantidadDeAmigos red y) 
                           | otherwise = y
 
 usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario     
-usuarioConMasAmigosAux _ [] = undefined
 usuarioConMasAmigosAux _ [x] = x
 usuarioConMasAmigosAux red (x:y:xs) = usuarioConMasAmigosAux red (masAmigosxy : xs)                       
                                     where masAmigosxy = comparacionAmigos red x y
                                     
--- Ejercicio 5 (Falta un poco mas de testing) 
+-- Ejercicio 5 
 
 estaRobertoCarlos :: RedSocial -> Bool
 estaRobertoCarlos red = estaRobertoCarlosAux red (usuarios red)
@@ -96,7 +95,7 @@ publicacionesDeAux :: [Publicacion] -> Usuario -> [Publicacion]
 publicacionesDeAux [] _ = []
 publicacionesDeAux (x:xs) us | usuarioDePublicacion x == us = x : publicacionesDeAux xs us
                              | otherwise = publicacionesDeAux xs us
---La funcion auxiliar crea la lista de publicaciones del usuario y publicacionesDe saca los repetidos
+--La funcion auxiliar crea la lista de publicaciones del usuario
 
 -- Ejercicio 7
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
