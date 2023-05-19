@@ -88,7 +88,7 @@ estaRobertoCarlosAux _ [] = False
 estaRobertoCarlosAux red (x:xs) | (cantidadDeAmigos red x) > 10 = True
                             | otherwise = estaRobertoCarlosAux red xs
                             
--- ejercicio 6
+-- Ejercicio 6
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
 publicacionesDe red us = publicacionesDeAux (publicaciones red) us
 
@@ -112,7 +112,7 @@ publicacionesQueLeGustanAAux (x:xs) us | pertenece us (likesDePublicacion x) = x
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
 lesGustanLasMismasPublicaciones red u1 u2 = (mismoselementos (publicacionesQueLeGustanA red u1) (publicacionesQueLeGustanA red u2))
 
---Ejercicio 9
+-- Ejercicio 9
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
 tieneUnSeguidorFiel red us | publicacionesDe red us /= [] = tieneUnSeguidorFielAux red (usuarios red) us
 
@@ -151,8 +151,7 @@ quitarUltimo :: (Eq t) => [t] ->[t]
 quitarUltimo ls = quitar (ultimo ls) ls
 
 
-
--- Predicados
+-- Funciones auxiliares
 
 -- Determina la longitud de una lista.
 longitud :: (Eq t) => [t] -> Integer
