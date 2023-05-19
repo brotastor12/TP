@@ -74,7 +74,10 @@ usuarioConMasAmigosAux :: RedSocial -> [Usuario] -> Usuario
 usuarioConMasAmigosAux _ [x] = x
 usuarioConMasAmigosAux red (x:y:xs) = usuarioConMasAmigosAux red (masAmigosxy : xs)                       
                                     where masAmigosxy = comparacionAmigos red x y
-                                    
+
+{- usuarioConMasAmigosAux compara quien tiene mas amigos entre los primeros 2 elementos y hace una recursion 
+   mantniendo el mas grande en la cabecera. Al final de la recursion solo queda el usuario con mas amigos-}
+
 -- Ejercicio 5 
 
 estaRobertoCarlos :: RedSocial -> Bool
@@ -118,9 +121,12 @@ tieneUnSeguidorFielAux red [] us = False
 tieneUnSeguidorFielAux red (seguidor:xs) us | seguidor == us = tieneUnSeguidorFielAux red xs us
                                             | esFiel red us seguidor = True
                                             | otherwise = tieneUnSeguidorFielAux red xs us
+-- Revisa si us tiene un seguidor fiel con una recursion y si lo encuentra devuelve True. 
+-- Si termina la recursion sin encontrar uno da False
 
 esFiel :: RedSocial -> Usuario -> Usuario -> Bool
 esFiel red us seguidor = incluido (publicacionesDe red us) (publicacionesQueLeGustanA red seguidor)
+-- seguidor es fiel si le dio like a todas las publicaciones del us
 
 -- Ejercicio 10
 
