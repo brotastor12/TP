@@ -38,13 +38,13 @@ nombresDeUsuarios :: RedSocial -> [String]
 nombresDeUsuarios red = proyectarNombres (usuarios red)
 
 proyectarNombres :: [Usuario] -> [String]
-proyectarNombres us | sinRepetidos listaNombres = listaNombres
-                    | otherwise = sacarRepetidos listaNombres
+proyectarNombres us = sacarRepetidos listaNombres
                     where listaNombres = proyectarNombresAux us
--- proyectarNombres revisa si hay repetidos
+-- proyectarNombres quita los repetidos de la lista de nombres de usuario
+
 proyectarNombresAux :: [Usuario] -> [String]
 proyectarNombresAux [] = []
-proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombres xs
+proyectarNombresAux (x:xs) = nombreDeUsuario x : proyectarNombresAux xs
 -- proyectarNombresAux crea una lista con los nombres de usuario
 
 -- Ejercicio 2
@@ -115,6 +115,7 @@ lesGustanLasMismasPublicaciones red u1 u2 = (mismoselementos (publicacionesQueLe
 -- Ejercicio 9
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
 tieneUnSeguidorFiel red us | publicacionesDe red us /= [] = tieneUnSeguidorFielAux red (usuarios red) us
+                           | otherwise = False
 
 tieneUnSeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
 tieneUnSeguidorFielAux red [] us = False
@@ -129,26 +130,6 @@ esFiel red us seguidor = incluido (publicacionesDe red us) (publicacionesQueLeGu
 -- seguidor es fiel si le dio like a todas las publicaciones del us
 
 -- Ejercicio 10
-
--- Verifica si existe una cadena de amigos como la planteada en cadenaDeAmigos entre usuarios que le demos
-existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos red us1 us2 = existeSecuenciaDeAmigosAux red (usuarios red) us1 us2
-
--- Verifica que para la lista creada en armarCadena, haya una cadena de amigos y que esta tambien empiece con el usuario 1 y termine con el usuario 2. 
-existeSecuenciaDeAmigosAux :: RedSocial -> [Usuario] -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigosAux red us u1 u2 = cadenaDeAmigos z red && empiezaCon u1 z && terminaCon u2 z
-                                                where z = (armarCadena us u1 u2)
-
--- Crea una lista de usuarios con los usuarios entre us1 y us2 inclusive
--- Si no se cumplen las condiciones, remueve elementos de la lista recursivamente hasta que se cumplan o que se genere una lista de longitud menor o igual a 2
-armarCadena :: [Usuario] -> Usuario -> Usuario -> [Usuario]
-armarCadena (x:xs) u1 u2 | longitud (x:xs) <= 2 = (x:xs)
-                         | x == u1 && terminaCon u2 (x:xs) = (x:xs)
-                         | x /= u1 = armarCadena xs u1 u2
-                         | otherwise = armarCadena (quitarUltimo (x:xs)) u1 u2
-
-quitarUltimo :: (Eq t) => [t] ->[t]
-quitarUltimo ls = quitar (ultimo ls) ls
 
 
 -- Funciones auxiliares
@@ -225,4 +206,7 @@ ultimo :: [t] -> t
 ultimo [] = undefined
 ultimo [x] = x
 ultimo (x:xs) = ultimo xs
+
+quitarUltimo :: (Eq t) => [t] ->[t]
+quitarUltimo ls = quitar (ultimo ls) ls
 
