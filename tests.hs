@@ -2,7 +2,7 @@ module Tests where
 import Test.HUnit
 import Solucion
 
-run = runTestTT tests
+main = runTestTT tests
 
 tests = test (testNombresDeUsuarios ++ testAmigosDe ++ testCantidadDeAmigos ++ testUsuarioConMasAmigos ++ testEstaRobertoCarlos ++ testPublicacionesDe ++ testPublicacionesQueLeGustanA ++ testLesGustanLasMismasPublicaciones ++ testTieneUnSeguidorFiel ++ testExisteSecuenciaDeAmigos)
 
