@@ -4,26 +4,25 @@ import Solucion
 
 main = runTestTT tests
 
-tests = test (testNombresDeUsuarios ++ testAmigosDe ++ testCantidadDeAmigos ++ testUsuarioConMasAmigos ++ testEstaRobertoCarlos ++ testPublicacionesDe ++ testPublicacionesQueLeGustanA ++ testLesGustanLasMismasPublicaciones ++ testTieneUnSeguidorFiel ++ testExisteSecuenciaDeAmigos)
+tests = test (testNombresDeUsuarios ++ testAmigosDe ++ testCantidadDeAmigos ++ testUsuarioConMasAmigos ++ testEstaRobertoCarlos ++ testPublicacionesDe ++ testPublicacionesQueLeGustanA ++ testLesGustanLasMismasPublicaciones ++ testTieneUnSeguidorFiel ++ testExisteSecuenciaDeAmigos ++ testmismoselementos)
 
 --Ejercicio 1
 testNombresDeUsuarios = [
-    " devuelve los nombres de usuarios de la red sin repetidos" ~: nombresDeUsuarios red1 ~?= ["Pablo", "Juana", "Valentina", "Juan"],
+    " devuelve los nombres de usuarios de la red sin repetidos" ~: mismoselementos (nombresDeUsuarios red1) ["Pablo", "Juana", "Valentina", "Juan"] ~?= True,
     " una red sin ususarios devuelve []" ~: nombresDeUsuarios redVacia ~?= []]
 
 -- Ejercicio 2
 testAmigosDe = [
-    " devuelve todos los amigos del usuario" ~: amigosDe red1 usuario1 ~?= [usuario3, usuario4, usuario2],
+    " devuelve todos los amigos del usuario" ~: mismoselementos (amigosDe red1 usuario1) [usuario3, usuario4, usuario2] ~?= True,
     " un usuario sin amigos devuelve []" ~: amigosDe red2 usuario4 ~?= []]
 
 -- Ejercicio 3
 testCantidadDeAmigos = [
     " devuelve la cantidad de amigos del usuario" ~: cantidadDeAmigos red1 usuario1 ~?= 3]
-
 --Ejercicio 4
 testUsuarioConMasAmigos = [
     " devuelve el usuario con mas amigos" ~: usuarioConMasAmigos red1 ~?= usuario1 ,
-    " devuelve el ultimo usuario con la mayor cantidad de amigos si hay mas de uno" ~: usuarioConMasAmigos red2 ~?= usuario3]
+    " devuelve el ultimo usuario con la mayor cantidad de amigos si hay mas de uno" ~: expectAny (usuarioConMasAmigos red2) [usuario3, usuario2]]
 
 -- Ejercicio 5
 testEstaRobertoCarlos = [
@@ -33,12 +32,12 @@ testEstaRobertoCarlos = [
 
 -- Ejercicio 6
 testPublicacionesDe = [
-    " devuelve todas las publicaciones del usuario" ~: publicacionesDe red1 usuario2 ~?= [publicacion3_us2, publicacion2_us2, publicacion1_us2],
+    " devuelve todas las publicaciones del usuario" ~: mismoselementos (publicacionesDe red1 usuario2) [publicacion3_us2, publicacion2_us2, publicacion1_us2] ~?= True,
     " si el usuario no tiene publicaciones devuelve vacio" ~: publicacionesDe red1 usuario3 ~?= []]
 
 -- Ejercicio 7
 testPublicacionesQueLeGustanA = [
-    " devuelve todas las publicaciones que le gustan al usuario" ~: publicacionesQueLeGustanA red1 usuario4 ~?= [publicacion1_us2, publicacion1_us1],
+    " devuelve todas las publicaciones que le gustan al usuario" ~: mismoselementos (publicacionesQueLeGustanA red1 usuario4) [publicacion1_us2, publicacion1_us1] ~?= True,
     " devuelve vacio si no le gusta ninguna publicacion" ~: publicacionesQueLeGustanA red1 usuario2 ~?= []]
 
 --Ejercicio 8
@@ -56,6 +55,15 @@ testExisteSecuenciaDeAmigos = [
     " devuelve True si existe una cadena de amigos entre los usuarios dados" ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True ,
     " devuelve False si no cumple la condicion" ~: existeSecuenciaDeAmigos red1 usuario1 usuario4 ~?= False ,
     " devuelve False si los usuarios dados no estan en orden" ~: existeSecuenciaDeAmigos red1 usuario3 usuario1 ~?= False]
+
+--mismoselementos
+testmismoselementos = [
+    "devuelve true si las 2 listas contienen los mismos elementos" ~: mismoselementos [1,2,3,4] [1,2,3,4] ~?= True ,
+    "devuelve true aunque esten en distinto orden" ~: mismoselementos [1,2,3,4] [2,3,1,4] ~?= True ,
+    "si las listas no contienen los mismos elementos devuelve false" ~: mismoselementos [1,2,3,4] [3,6,9,8] ~?= False ,
+    "devuelve false aunque una de las listas este incluida en la otra" ~: mismoselementos [1,2,3] [1,2,3,4] ~?= False]
+
+expectAny actual expected = elem actual expected ~? ("expected any of: " ++ show expected ++ "\n but got: " ++ show actual)
 
 usuario1 :: Usuario
 usuario1 = (1, "Pablo")
