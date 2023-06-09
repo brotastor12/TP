@@ -2,6 +2,7 @@ module Tests where
 import Test.HUnit
 import Solucion
 
+
 main = runTestTT tests
 
 tests = test (testNombresDeUsuarios ++ testAmigosDe ++ testCantidadDeAmigos ++ testUsuarioConMasAmigos ++ testEstaRobertoCarlos ++ testPublicacionesDe ++ testPublicacionesQueLeGustanA ++ testLesGustanLasMismasPublicaciones ++ testTieneUnSeguidorFiel ++ testExisteSecuenciaDeAmigos ++ testmismoselementos)
@@ -52,9 +53,12 @@ testTieneUnSeguidorFiel = [
 
 -- Ejercicio 10
 testExisteSecuenciaDeAmigos = [
-    " devuelve True si existe una cadena de amigos entre los usuarios dados" ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True ,
-    " devuelve False si no cumple la condicion" ~: existeSecuenciaDeAmigos red1 usuario1 usuario4 ~?= False ,
-    " devuelve False si los usuarios dados no estan en orden" ~: existeSecuenciaDeAmigos red1 usuario3 usuario1 ~?= False]
+    " True: Existe cadena de amigos posible empezando con u1 y terminando con u2 " ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True,
+    " True: u1 y u2 son amigos " ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True,
+    " True: Existe aunque haya que pasar por varios amigos" ~: existeSecuenciaDeAmigos red4 usuario2 usuario7 ~?= True,
+    " False: no existe cadena posible que cumpla" ~: existeSecuenciaDeAmigos red3 usuario2 usuario4 ~?= False,
+    " False: u2 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario3 usuario4 ~?= False,
+    " False: u1 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario4 usuario2 ~?= False]
 
 --mismoselementos
 testmismoselementos = [
@@ -79,6 +83,8 @@ usuario5R = (5, "Juan")
 
 usuarios1 :: [Usuario]
 usuarios1 = [usuario1, usuario2, usuario3, usuario4, usuario5R]
+usuarios2 :: [Usuario]
+usuarios2 = [usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7]
 
 relacion1 :: Relacion
 relacion1 = (usuario1, usuario3)
@@ -88,13 +94,20 @@ relacion3 :: Relacion
 relacion3 = (usuario1, usuario4)
 relacion4 :: Relacion
 relacion4 = (usuario2, usuario1)
-
+relacion5 :: Relacion
+relacion5 = (usuario1,usuario5)
+relacion6 = (usuario2, usuario5)
+relacion7 = (usuario1, usuario7)
+relacion8 = (usuario4, usuario7)
 
 relaciones1 :: [Relacion]
 relaciones1 = [relacion1, relacion2, relacion3, relacion4]
 relaciones2 :: [Relacion]
 relaciones2 = [relacion1, relacion2, relacion4]
-
+relaciones3 :: [Relacion]
+relaciones3 = [relacion3, relacion2]
+relaciones4 :: [Relacion]
+relaciones4 = [relacion2, relacion7, relacion5, relacion6, relacion8]
 
 
 publicacion1_us1 :: Publicacion
@@ -117,6 +130,9 @@ red1 :: RedSocial
 red1 = (usuarios1, relaciones1, publicaciones1)
 red2 :: RedSocial
 red2 = (usuarios1, relaciones2, publicaciones1)
+red3 :: RedSocial
+red3 = (usuarios1, relaciones3, publicaciones1)
+red4 = (usuarios2, relaciones4, [])
 redVacia :: RedSocial
 redVacia = ([], [], [])
 
