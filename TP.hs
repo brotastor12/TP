@@ -211,9 +211,9 @@ quitarUltimo :: (Eq t) => [t] ->[t]
 quitarUltimo ls = quitar (ultimo ls) ls
 
 -------------------------------
-amigosDeRecursivo :: [Relacion] -> [Usuario] -> [[Usuario]]
+{- amigosDeRecursivo :: [Relacion] -> [Usuario] -> [[Usuario]]
 amigosDeRecursivo [] _ = []
-amigosDeRecursivo rel (x:xs) = amigosDeAux rel x : amigosDeRecursivo rel (xs)
+amigosDeRecursivo rel (x:xs) = amigosDeAux rel x : amigosDeRecursivo rel (xs) -}
 
 --sonAmigosMOD hace exactamente lo mismo que sonAmigos pero con las relaciones directamente
 sonAmigosMOD :: Relacion -> [Relacion] -> Bool
@@ -231,11 +231,10 @@ quitarRecursiva [] recipiente = recipiente
 quitarRecursiva (x:xs) recipiente = quitarRecursiva xs (quitar x recipiente)
 
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos red u1 u2 = existeSecuenciaDeAmigosAux red u1 u2
-
-existeSecuenciaDeAmigosAux :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigosAux red u1 u2 | pertenece u2 (amigosDe red u1) = True
-                                     | otherwise = verificador (quitarRecursiva (relacionesDe (relaciones red) u1) (relaciones red)) (amigosDe red u1) u1 u2
+existeSecuenciaDeAmigos red u1 u2 | pertenece u2 (amigosDe red u1) = True
+                                  | amigosDe red u2 == [] = False
+                                  | otherwise = verificador relacionesFiltradas (amigosDe red u1) u1 u2
+                                  where relacionesFiltradas = quitarRecursiva (relacionesDe (relaciones red) u1) (relaciones red)
 {- Verifica primero si u1 y u2 son amigos, si no lo son procede a enviar todos los recursos necesarios a verificador,
 el quitarRecursiva que aparece al principio esta para remover todas las relaciones en las que aparece u1 de la lista de rel a analizar.-}
 
@@ -267,6 +266,7 @@ verificador rel (x:xs) u1 u2 | sonAmigosMOD (x,u2) rel = True
                              | otherwise = verificador rel (xs) u1 u2 -}
 
 verificador :: [Relacion] -> [Usuario] -> Usuario -> Usuario -> Bool
+verificador _ [] _ _ = False
 verificador [] _ _ _ = False
 verificador rel (x:xs) u1 u2 | sonAmigosMOD (x,u2) rel = True
                              | otherwise = verificadortriple rel x u2 || verificador rel (xs) u1 u2
