@@ -211,17 +211,74 @@ quitarUltimo :: (Eq t) => [t] ->[t]
 quitarUltimo ls = quitar (ultimo ls) ls
 
 -------------------------------
+amigosDeRecursivo :: [Relacion] -> [Usuario] -> [[Usuario]]
+amigosDeRecursivo [] _ = []
+amigosDeRecursivo rel (x:xs) = amigosDeAux rel x : amigosDeRecursivo rel (xs)
 
+--sonAmigosMOD hace exactamente lo mismo que sonAmigos pero con las relaciones directamente
+sonAmigosMOD :: Relacion -> [Relacion] -> Bool
+sonAmigosMOD (u1, u2) rel = pertenece (u1,u2) rel || pertenece (u2,u1) rel
+
+-- relacionesDe junta en una lista todas las relaciones en las que participa el usuario que le sea solicitado.
+relacionesDe :: [Relacion] -> Usuario -> [Relacion]
+relacionesDe [] _ = []
+relacionesDe ((r1,r2):xs) us | r1 == us || r2 == us = (r1,r2) : relacionesDe (xs) us
+                             | otherwise = relacionesDe xs us
+
+-- quitarRecursiva le quita todos los elementos en una lista a otra lista.
+quitarRecursiva :: Eq t => [t] -> [t] -> [t]
+quitarRecursiva [] recipiente = recipiente
+quitarRecursiva (x:xs) recipiente = quitarRecursiva xs (quitar x recipiente)
 
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos red u1 u2 = existeSecuenciaDeAmigosAux (usuarios red) u1 u2
+existeSecuenciaDeAmigos red u1 u2 = existeSecuenciaDeAmigosAux red u1 u2
 
-existeSecuenciaDeAmigosAux :: RedSocial -> [Usuario] -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigosAux red us u1 u2 | pertenece u2 (amigosDe red u1) = True
-                                        | otherwise = amigosDeRecursivo red (amigosDe red u1) u1 u2
+existeSecuenciaDeAmigosAux :: RedSocial -> Usuario -> Usuario -> Bool
+existeSecuenciaDeAmigosAux red u1 u2 | pertenece u2 (amigosDe red u1) = True
+                                     | otherwise = verificador (quitarRecursiva (relacionesDe (relaciones red) u1) (relaciones red)) (amigosDe red u1) u1 u2
+{- Verifica primero si u1 y u2 son amigos, si no lo son procede a enviar todos los recursos necesarios a verificador,
+el quitarRecursiva que aparece al principio esta para remover todas las relaciones en las que aparece u1 de la lista de rel a analizar.-}
 
-amigosDeRecursivo :: RedSocial -> [Usuario] -> Usuario -> Usuario -> Bool
-amigosDeRecursivo red (x:xs) u1 u2 | pertenece u2 (quitar u1 (amigosDe red x)) = True
-                                   | 
-                                   | otherwise = amigosDeRecursivo red (xs) u1 u2
+{- Por que le di un doble rel a verificador? porque voy a utilizar el primer rel como el normal que utilizo para verificar si
+u2 es amigo de cualquiera de los amigos de los amigos de u1, mientras que voy a usar el segundo rel como aquel al cual 
+(en caso de que ninguno de los amigos de los amigos de u1 sea u2) le puedo quitar las rel que estan en u1, y asi por consecuente ir
+descartando las relaciones que ya no sirven hasta que la lista de relaciones se vacie. Para quitar las relaciones, voy a implementar
+una funcion quitar pero recursiva-} 
+
+{- O AL MENOS ESE ERA MI PLAN AL PRINCIPIO, HASTA QUE:
+Me di cuenta de que puedo hacer funciones que recuperen las relaciones que necesito, como es relacionesDe y directamente hacer verif
+sin uso de red ni de dos rel, simplemente cuando los pase por verificadorDoble les quito las relaciones para cada caso, cosa de 
+asegurarme de no sacar relaciones de mas.-}
+
+-- Hice el sonAmigosMOD porque amigos de necesita de la red y yo quiero usar las relaciones sin las relaciones que ya escanee 
+-- previamente, y no puedo hacer eso con relaciones red
+
+-- SAQUE EL PRIMER REL EN SI, APARENTEMENTE NO NECESITO UN REL DESCARTABLE APARTE, CON TENER LOS REL DESDE UN PRINCIPIO BASTA
+
+{- Bueno, la funcion de verificador que NO esta comentada funciona bien para los casos en los que deberia, pero para los que no me
+termina tirando non-exhausitive patterns como error. Tambien deje otra version de verificador que es la que esta explicada arriba,
+pero termine probando otra que funciona (la que esta sin comment) pero no para cuando tiene que parar, incluso aunque le voy sacando 
+relaciones.-}
+
+{- verificador :: [Relacion] -> [Usuario] -> Usuario -> Usuario -> Bool
+verificador [] _ _ _ = False
+verificador rel (x:xs) u1 u2 | sonAmigosMOD (x,u2) rel = True
+                             | sonAmigosMOD (x,u2) rel == False && longitud (x:xs) == 1 = verificadorDoble rel 
+                             | otherwise = verificador rel (xs) u1 u2 -}
+
+verificador :: [Relacion] -> [Usuario] -> Usuario -> Usuario -> Bool
+verificador [] _ _ _ = False
+verificador rel (x:xs) u1 u2 | sonAmigosMOD (x,u2) rel = True
+                             | otherwise = verificadortriple rel x u2 || verificador rel (xs) u1 u2
+
+{- verificadorDoble :: [Relacion] -> [[Usuario]] -> Usuario -> Usuario -> Bool
+verificadorDoble rel (x:xs) u1 u2 | verificador rel x u1 u2 = True
+                                  | otherwise = verificadorDoble rel xs u1 u2 -}
+
+verificadortriple :: [Relacion] -> Usuario -> Usuario -> Bool
+verificadortriple rel u1 u2 = verificador (quitarRecursiva (relacionesDe (rel) u1) (rel)) (amigosDeAux rel u1) u1 u2
+
+red1 = ([(1,"a"),(2,"b"),(3,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h")],[((1,"a"),(2,"b")),((2,"b"),(3,"c")),((3,"c"),(4,"d"))], [])
+
+red2 = ([(1,"a"),(2,"b"),(3,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h")],[((1,"a"),(3,"c")),((2,"b"),(3,"c")),((4,"d"),(2,"b")),((6,"f"),(7,"g"))], [])
 
