@@ -52,10 +52,13 @@ testTieneUnSeguidorFiel = [
 
 -- Ejercicio 10
 testExisteSecuenciaDeAmigos = [
-    " devuelve True si existe una cadena de amigos entre los usuarios dados" ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True ,
-    " devuelve False si no cumple la condicion" ~: existeSecuenciaDeAmigos red1 usuario1 usuario4 ~?= False ,
-    " devuelve False si los usuarios dados no estan en orden" ~: existeSecuenciaDeAmigos red1 usuario3 usuario1 ~?= False]
-
+    " True: Existe cadena de amigos posible empezando con u1 y terminando con u2 " ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True,
+    " True: u1 y u2 son amigos " ~: existeSecuenciaDeAmigos red1 usuario1 usuario3 ~?= True,
+    " True: Existe aunque haya que pasar por varios amigos" ~: existeSecuenciaDeAmigos red4 usuario2 usuario4 ~?= True,
+    " False: no existe cadena posible que cumpla" ~: existeSecuenciaDeAmigos red3 usuario2 usuario4 ~?= False,
+    " False: u2 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario3 usuario4 ~?= False,
+    " False: u1 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario4 usuario2 ~?= False]
+    
 --mismoselementos
 testmismoselementos = [
     "devuelve true si las 2 listas contienen los mismos elementos" ~: mismoselementos [1,2,3,4] [1,2,3,4] ~?= True ,
