@@ -20,7 +20,7 @@ testAmigosDe = [
 -- Ejercicio 3
 testCantidadDeAmigos = [
     " devuelve la cantidad de amigos del usuario" ~: cantidadDeAmigos red1 usuario1 ~?= 3
-    " si amigosDe del usuario devuelve [] (el usuario no tiene amigos), devuelve 0" ~: cantidadDeAmigos red2 usuario4 ~?= 4]
+    " si amigosDe del usuario devuelve [] (el usuario no tiene amigos), devuelve 0" ~: cantidadDeAmigos red2 usuario4 ~?= 0]
     
 --Ejercicio 4
 testUsuarioConMasAmigos = [
