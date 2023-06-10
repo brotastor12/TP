@@ -19,7 +19,7 @@ testAmigosDe = [
 
 -- Ejercicio 3
 testCantidadDeAmigos = [
-    " devuelve la cantidad de amigos del usuario" ~: cantidadDeAmigos red1 usuario1 ~?= 3
+    " devuelve la cantidad de amigos del usuario" ~: cantidadDeAmigos red1 usuario1 ~?= 3,
     " si amigosDe del usuario devuelve [] (el usuario no tiene amigos), devuelve 0" ~: cantidadDeAmigos red2 usuario4 ~?= 0]
     
 --Ejercicio 4
@@ -46,8 +46,8 @@ testPublicacionesQueLeGustanA = [
 --Ejercicio 8
 testLesGustanLasMismasPublicaciones = [
     " True: Les gustan las mismas publicaciones" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario4 ~?= True ,
-    " False: Tienen algunas pero no todas las publicaciones que les gustan en comun" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario3 ~?= False
-    " False: A un usuario no le gusta ninguna publicacion y al otro si" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario2 ~?= False
+    " False: Tienen algunas pero no todas las publicaciones que les gustan en comun" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario3 ~?= False,
+    " False: A un usuario no le gusta ninguna publicacion y al otro si" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario2 ~?= False,
     " True: A ninguno de los dos usuarios le gusta ninguna publicacion" ~: lesGustanLasMismasPublicaciones red1 usuario2 usuario5R ~?= True]
 
 --Ejercicio 9
