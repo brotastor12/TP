@@ -27,9 +27,9 @@ testUsuarioConMasAmigos = [
 
 -- Ejercicio 5
 testEstaRobertoCarlos = [
-    " Si tiene mas de 10 amigos da True" ~: estaRobertoCarlos redRC ~?= True ,
-    " Si tiene menos de 10 amigos da False" ~: estaRobertoCarlos red1 ~?= False ,
-    " Si tiene 10 amigos da false" ~: estaRobertoCarlos redRC2 ~?= False]
+    " True: tiene mas de 10 amigos" ~: estaRobertoCarlos redRC ~?= True ,
+    " False tiene menos de 10 amigos" ~: estaRobertoCarlos red1 ~?= False ,
+    " False: tiene 10 amigos" ~: estaRobertoCarlos redRC2 ~?= False]
 
 -- Ejercicio 6
 testPublicacionesDe = [
@@ -43,13 +43,14 @@ testPublicacionesQueLeGustanA = [
 
 --Ejercicio 8
 testLesGustanLasMismasPublicaciones = [
-    " si les gustan las mismas publicaciones devuelve True" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario4 ~?= True ,
-    " si no les gustan las mismas publicaciones devuelve False" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario2 ~?= False]
+    " True: Les gustan las mismas publicaciones" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario4 ~?= True ,
+    " False: no les gustan las mismas publicaciones" ~: lesGustanLasMismasPublicaciones red1 usuario1 usuario2 ~?= False]
 
 --Ejercicio 9
 testTieneUnSeguidorFiel = [
-    " si existe un alguien que le gusten todas las publicaciones devuelve True" ~: tieneUnSeguidorFiel red1 usuario2 ~?= True ,
-    " si no se cumple la condicion devuelve False" ~: tieneUnSeguidorFiel red1 usuario1 ~?= False]
+    " True: existe un alguien que le gusten todas las publicaciones" ~: tieneUnSeguidorFiel red1 usuario2 ~?= True ,
+    " Fales: no se cumple la condicion" ~: tieneUnSeguidorFiel red1 usuario1 ~?= False,
+    " False: red no tiene publicaciones" ~: tieneUnSeguidorFiel redCasiVacia usuario1 ~?= False]
 
 -- Ejercicio 10
 testExisteSecuenciaDeAmigos = [
@@ -58,14 +59,15 @@ testExisteSecuenciaDeAmigos = [
     " True: Existe aunque haya que pasar por varios amigos" ~: existeSecuenciaDeAmigos red4 usuario2 usuario7 ~?= True,
     " False: no existe cadena posible que cumpla" ~: existeSecuenciaDeAmigos red3 usuario2 usuario4 ~?= False,
     " False: u2 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario3 usuario4 ~?= False,
-    " False: u1 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario4 usuario2 ~?= False]
+    " False: u1 no tiene amigos" ~: existeSecuenciaDeAmigos red2 usuario4 usuario2 ~?= False,
+    " False: La red no tiene relaciones" ~: existeSecuenciaDeAmigos redCasiVacia usuario1 usuario2 ~?= False]
 
 --mismoselementos
 testmismoselementos = [
-    "devuelve true si las 2 listas contienen los mismos elementos" ~: mismoselementos [1,2,3,4] [1,2,3,4] ~?= True ,
-    "devuelve true aunque esten en distinto orden" ~: mismoselementos [1,2,3,4] [2,3,1,4] ~?= True ,
-    "si las listas no contienen los mismos elementos devuelve false" ~: mismoselementos [1,2,3,4] [3,6,9,8] ~?= False ,
-    "devuelve false aunque una de las listas este incluida en la otra" ~: mismoselementos [1,2,3] [1,2,3,4] ~?= False]
+    "True: las 2 listas contienen los mismos elementos" ~: mismoselementos [1,2,3,4] [1,2,3,4] ~?= True ,
+    "True: aunque esten en distinto orden" ~: mismoselementos [1,2,3,4] [2,3,1,4] ~?= True ,
+    "False: si las listas no contienen los mismos elementos" ~: mismoselementos [1,2,3,4] [3,6,9,8] ~?= False ,
+    "False: una de las listas este incluida en la otra pero no viceversa" ~: mismoselementos [1,2,3] [1,2,3,4] ~?= False]
 
 expectAny actual expected = elem actual expected ~? ("expected any of: " ++ show expected ++ "\n but got: " ++ show actual)
 
@@ -133,6 +135,8 @@ red2 = (usuarios1, relaciones2, publicaciones1)
 red3 :: RedSocial
 red3 = (usuarios1, relaciones3, publicaciones1)
 red4 = (usuarios2, relaciones4, [])
+redCasiVacia :: RedSocial
+redCasiVacia = (usuarios1, [], [])
 redVacia :: RedSocial
 redVacia = ([], [], [])
 
