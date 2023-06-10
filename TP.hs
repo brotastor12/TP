@@ -114,8 +114,8 @@ lesGustanLasMismasPublicaciones red u1 u2 = (mismoselementos (publicacionesQueLe
 
 -- Ejercicio 9
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
-tieneUnSeguidorFiel red us | publicacionesDe red us /= [] = tieneUnSeguidorFielAux red (usuarios red) us
-                           | otherwise = False
+tieneUnSeguidorFiel red us | publicacionesDe red us == [] = False
+                           | otherwise = tieneUnSeguidorFielAux red (usuarios red) us
 
 tieneUnSeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
 tieneUnSeguidorFielAux red [] us = False
